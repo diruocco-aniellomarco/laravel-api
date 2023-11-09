@@ -16,6 +16,10 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::with('tecnologies','type')->paginate(12);
+        foreach( $projects as $project ) {
+            $project->cover_image = $project->getUrlImag(); 
+        }
+
         return response()->json($projects);
     }
 
@@ -39,6 +43,7 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = Project::where('id', $id)->with('tecnologies','type')->first();
+        $project->cover_image = $project->getUrlImag();
         return response()->json($project);
     }
 
