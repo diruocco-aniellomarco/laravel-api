@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\Type;
 
 class ProjectController extends Controller
 {
@@ -69,4 +70,22 @@ class ProjectController extends Controller
 //     {
 //         //
 //     }
+
+
+
+    public function projectsByType($type_id) {
+
+        // $type = Type::where("id", $type_id)->select('id','label')->first();
+
+        // if(!$type)
+        //     abort(404,"Tipo non trovato");
+
+        $projects = Project::with('tecnologies','type')->where("type_id", $type_id)->paginate(12);
+
+        foreach( $projects as $project ) {
+            $project->cover_image = $project->getUrlImag(); 
+        }
+
+        return response()->json($projects);
+    }
 }
